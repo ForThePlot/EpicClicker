@@ -7,48 +7,67 @@
 <style>
   body {
     font-family: Arial, sans-serif;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
   #game-container {
     text-align: center;
-    position: relative;
-    padding-bottom: 100px; /* Space for bottom sidebar */
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
-  button {
-    font-size: 2em; /* Larger buttons */
-    padding: 20px;
-    margin: 10px;
+  #score-container {
+    font-size: 3em; /* BIG and bold */
+    font-weight: bold; /* BIG and bold */
+    text-align: left; /* at the top left */
+    margin: 20px;
+  }
+  #clicker-button {
+    font-size: 4em; /* Larger button */
+    padding: 30px;
+    margin: auto; /* put the clicker in the middle */
   }
   #upgrades-container {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
     background-color: #f8f8f8;
     border-top: 1px solid #ccc;
     padding: 10px 0;
   }
+  button {
+    font-size: 1.5em;
+    padding: 15px;
+    margin: 5px;
+  }
   #reset-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
+    align-self: flex-end;
+    margin: 20px;
+  }
+  #smiley-button {
+    align-self: flex-end;
+    margin-right: 20px;
   }
 </style>
 </head>
 <body>
+<div id="score-container">Score: <span id="score">0</span></div>
 <div id="game-container">
-  <button id="reset-button" onclick="resetGame()">Reset</button>
   <button id="clicker-button" onclick="updateScore()">👍</button>
-  <div id="score-container">Score: <span id="score">0</span></div>
   <div id="upgrades-container">
     <!-- Upgrades will be dynamically added here -->
   </div>
 </div>
+<button id="reset-button" onclick="resetGame()">Reset</button>
+<button id="smiley-button" onclick="makeSmiley()">😊</button>
 
 <script>
   let score = 0;
   let scorePerClick = 1;
   let autoClickerInterval;
   const scoreDisplay = document.getElementById('score');
+  const clickerButton = document.getElementById('clicker-button');
   const upgradesContainer = document.getElementById('upgrades-container');
 
   // Function to update the score
@@ -102,7 +121,15 @@
     // Reset other upgrades as needed
     console.log('Game has been reset.');
   }
+
+  // Function to change the clicker button to a smiley face
+  function makeSmiley() {
+    clickerButton.textContent = '😊';
+    clickerButton.onclick = updateScore; // Keep the score updating functionality
+  }
 </script>
 </body>
+</html>
+
 </html>
 
