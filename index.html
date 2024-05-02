@@ -11,31 +11,49 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Clicker Game</title>
 <style>
-  body {
-    text-align: center;
-    padding-top: 50px;
+  .game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
   }
-  #score {
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-  #clickMe {
-    padding: 10px 20px;
-    font-size: 20px;
+  .clickable {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: blue;
+    border-radius: 50%;
     cursor: pointer;
+    user-select: none;
+  }
+  .exploded {
+    background-color: red;
   }
 </style>
 </head>
 <body>
-  <div id="score">0</div>
-  <button id="clickMe">Support me!</button>
+<div class="game-container" id="gameContainer">
+  <div class="clickable" id="clickable"></div>
+</div>
 
-  <script>
-    var score = 0;
-    document.getElementById('clickMe').onclick = function() {
-      score++;
-      document.getElementById('score').textContent = score;
-    };
-  </script>
+<script>
+  let clickCount = 0;
+  const clickable = document.getElementById('clickable');
+  const gameContainer = document.getElementById('gameContainer');
+
+  clickable.addEventListener('click', function() {
+    clickCount++;
+    if (clickCount >= 100) {
+      clickable.classList.add('exploded');
+      clickable.textContent = 'BOOM!';
+    } else {
+      const maxX = gameContainer.clientWidth - clickable.clientWidth;
+      const maxY = gameContainer.clientHeight - clickable.clientHeight;
+      const newX = Math.random() * maxX;
+      const newY = Math.random() * maxY;
+      clickable.style.left = newX + 'px';
+      clickable.style.top = newY + 'px';
+    }
+  });
+</script>
 </body>
 </html>
