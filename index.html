@@ -1,153 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Clicker Game</title>
-<style>
-  body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    height: 100vh;
-    margin: 0;
-  }
-  #points {
-    font-size: 48px;
-    font-weight: bold;
-    margin-bottom: 20px;
-  }
-  #game-container {
-    text-align: center;
-  }
-  #sidebar, #reset-container {
-    width: 300px;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    padding: 20px;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.2);
-  }
-  #sidebar {
-    left: 0;
-    background-color: #f0f0f0;
-  }
-  #reset-container {
-    right: 0;
-    background-color: #ffdddd;
-  }
-  button {
-    font-size: 24px;
-    padding: 10px;
-    margin: 5px;
-  }
-  #clicker {
-    font-size: 64px;
-  }
-  #reset {
-    background-color: red;
-    color: white;
-  }
-</style>
+<!-- ... rest of the head ... -->
 </head>
 <body>
-<div id="points">Points: 0</div>
-<div id="game-container">
-  <button id="clicker">👍</button>
-</div>
-<div id="sidebar">
-  <h3>Upgrades</h3>
-  <button id="triple-click-upgrade">Triple Click (Cost: 25 points)</button>
-  <button id="auto-clicker">Buy Auto-Clicker (Cost: 50 points)</button>
-  <button id="auto-clicker-upgrade">Upgrade Auto-Clicker (Cost: 100 points)</button>
-  <!-- Add more upgrades as you like -->
-</div>
-<div id="reset-container">
-  <button id="reset">Reset Game</button>
-</div>
+<!-- ... rest of the body above the script ... -->
 
 <script>
-  let points = 0;
-  let pointsPerClick = 1;
-  let autoClickerCost = 50;
-  let autoClickerRate = 0;
-  let autoClickerCount = 0;
-  let autoClickerUpgradeCost = 100;
-  let tripleClickUpgradeCost = 25;
+  // ... rest of the existing script ...
 
-  document.getElementById('clicker').addEventListener('click', function() {
-    points += pointsPerClick;
-    updatePointsDisplay();
-  });
+  // Define new upgrade costs
+  let upgradeCosts = {
+    'clickMultiplier2': 100,
+    'clickMultiplier5': 500,
+    'clickMultiplier10': 1000,
+    'autoClickerSpeed2': 200,
+    'autoClickerSpeed5': 1000,
+    // Add more unique upgrade identifiers and their costs
+    'clickMultiplier20': 2000,
+    'clickMultiplier50': 5000,
+    'clickMultiplier100': 10000,
+    'autoClickerSpeed10': 2000,
+    'autoClickerSpeed20': 5000,
+    // ... add more as needed ...
+  };
 
-  document.getElementById('triple-click-upgrade').addEventListener('click', function() {
-    if (points >= tripleClickUpgradeCost) {
-      points -= tripleClickUpgradeCost;
-      pointsPerClick *= 3;
-      tripleClickUpgradeCost *= 2;
-      this.textContent = 'Triple Click (Cost: ' + tripleClickUpgradeCost + ' points)';
-      updatePointsDisplay();
-    } else {
-      alert('Not enough points for Triple Click Upgrade!');
-    }
-  });
-
-  document.getElementById('auto-clicker').addEventListener('click', function() {
-    if (points >= autoClickerCost && autoClickerCount < 10) {
-      points -= autoClickerCost;
-      autoClickerRate += 1;
-      autoClickerCount++;
-      autoClickerCost *= 2;
-      this.textContent = 'Buy Auto-Clicker (Cost: ' + autoClickerCost + ' points)';
-      updatePointsDisplay();
-    } else if (autoClickerCount >= 10) {
-      alert('Maximum Auto-Clickers purchased!');
-    } else {
-      alert('Not enough points for Auto-Clicker!');
-    }
-  });
-
-  document.getElementById('auto-clicker-upgrade').addEventListener('click', function() {
-    if (points >= autoClickerUpgradeCost) {
-      points -= autoClickerUpgradeCost;
-      autoClickerRate *= 3;
-      autoClickerUpgradeCost *= 2;
-      this.textContent = 'Upgrade Auto-Clicker (Cost: ' + autoClickerUpgradeCost + ' points)';
-      updatePointsDisplay();
-    } else {
-      alert('Not enough points for Auto-Clicker Upgrade!');
-    }
-  });
-
-  document.getElementById('reset').addEventListener('click', function() {
-    // Reset all game variables
-    points = 0;
-    pointsPerClick = 1;
-    autoClickerCost = 50;
-    autoClickerRate = 0;
-    autoClickerCount = 0;
-    autoClickerUpgradeCost = 100;
-    tripleClickUpgradeCost = 25;
-    document.getElementById('auto-clicker').textContent = 'Buy Auto-Clicker (Cost: 50 points)';
-    document.getElementById('auto-clicker-upgrade').textContent = 'Upgrade Auto-Clicker (Cost: 100 points)';
-    document.getElementById('triple-click-upgrade').textContent = 'Triple Click (Cost: 25 points)';
-    updatePointsDisplay();
-    // Re-enable all buttons
-    document.querySelectorAll('button').forEach(button => {
-      button.disabled = false;
+  // Function to create an upgrade button
+  function createUpgradeButton(id, text) {
+    let button = document.createElement('button');
+    button.id = id;
+    button.textContent = text + ' (Cost: ' + upgradeCosts[id] + ' points)';
+    button.addEventListener('click', function() {
+      if (points >= upgradeCosts[id]) {
+        points -= upgradeCosts[id];
+        // Define the effect of the upgrade
+        if (id.startsWith('clickMultiplier')) {
+          let multiplier = parseInt(id.replace('clickMultiplier', ''));
+          pointsPerClick *= multiplier;
+        } else if (id.startsWith('autoClickerSpeed')) {
+          let speedIncrease = parseInt(id.replace('autoClickerSpeed', ''));
+          autoClickerRate += speedIncrease;
+        }
+        upgradeCosts[id] *= 2; // Double the cost for the next purchase
+        this.textContent = text + ' (Cost: ' + upgradeCosts[id] + ' points)';
+        updatePointsDisplay();
+      } else {
+        alert('Not enough points for ' + text + '!');
+      }
     });
-  });
-
-  setInterval(function() {
-    points += autoClickerRate;
-    updatePointsDisplay();
-  }, 1000);
-
-  function updatePointsDisplay() {
-    document.getElementById('points').textContent = 'Points: ' + points;
+    return button;
   }
+
+  // Add the new upgrade buttons to the sidebar
+  let sidebar = document.getElementById('sidebar');
+  sidebar.appendChild(createUpgradeButton('clickMultiplier2', 'Double Click Points'));
+  sidebar.appendChild(createUpgradeButton('clickMultiplier5', 'Quintuple Click Points'));
+  sidebar.appendChild(createUpgradeButton('clickMultiplier10', 'Decuple Click Points'));
+  sidebar.appendChild(createUpgradeButton('autoClickerSpeed2', 'Double Auto-Clicker Speed'));
+  sidebar.appendChild(createUpgradeButton('autoClickerSpeed5', 'Quintuple Auto-Clicker Speed'));
+  // ... add more buttons as needed ...
+
+  // ... rest of the existing script ...
 </script>
 </body>
 </html>
+
 
