@@ -1,64 +1,68 @@
-// HTML structure
-/*
-<div id="game-container">
-  <button id="clicker-button">👍</button>
-  <div id="score-container">Score: <span id="score">0</span></div>
-  <div id="upgrades-container">
-    <!-- Upgrades will be dynamically added here -->
-  </div>
-</div>
-*/
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ... rest of the head ... -->
+</head>
+<body>
+<!-- ... rest of the body above the script ... -->
 
-// CSS for basic styling
-/*
-#game-container {
-  text-align: center;
-}
-#clicker-button {
-  font-size: 3em;
-  padding: 10px;
-}
-#upgrades-container {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 20px;
-}
-*/
+<script>
+  // ... rest of the existing script ...
 
-// JavaScript for game logic
-let score = 0;
-const scoreDisplay = document.getElementById('score');
-const clickerButton = document.getElementById('clicker-button');
-const upgradesContainer = document.getElementById('upgrades-container');
-
-// Function to update the score
-function updateScore() {
-  score++;
-  scoreDisplay.textContent = score;
-}
-
-// Event listener for the clicker button
-clickerButton.addEventListener('click', updateScore);
-
-// Function to add upgrades
-function addUpgrade(name, cost) {
-  const upgrade = document.createElement('button');
-  upgrade.textContent = `${name} - Cost: ${cost}`;
-  upgrade.onclick = function() {
-    if (score >= cost) {
-      score -= cost;
-      // Implement the upgrade effect here
-      console.log(`${name} upgrade purchased!`);
-    } else {
-      console.log('Not enough score to purchase this upgrade.');
-    }
+  // Define new upgrade costs
+  let upgradeCosts = {
+    'clickMultiplier2': 100,
+    'clickMultiplier5': 500,
+    'clickMultiplier10': 1000,
+    'autoClickerSpeed2': 200,
+    'autoClickerSpeed5': 1000,
+    // Add more unique upgrade identifiers and their costs
+    'clickMultiplier20': 2000,
+    'clickMultiplier50': 5000,
+    'clickMultiplier100': 10000,
+    'autoClickerSpeed10': 2000,
+    'autoClickerSpeed20': 5000,
+    // ... add more as needed ...
   };
-  upgradesContainer.appendChild(upgrade);
-}
 
-// Add 10 different upgrades
-for (let i = 1; i <= 10; i++) {
-  addUpgrade(`Upgrade ${i}`, i * 10);
-}
+  // Function to create an upgrade button
+  function createUpgradeButton(id, text) {
+    let button = document.createElement('button');
+    button.id = id;
+    button.textContent = text + ' (Cost: ' + upgradeCosts[id] + ' points)';
+    button.addEventListener('click', function() {
+      if (points >= upgradeCosts[id]) {
+        points -= upgradeCosts[id];
+        // Define the effect of the upgrade
+        if (id.startsWith('clickMultiplier')) {
+          let multiplier = parseInt(id.replace('clickMultiplier', ''));
+          pointsPerClick *= multiplier;
+        } else if (id.startsWith('autoClickerSpeed')) {
+          let speedIncrease = parseInt(id.replace('autoClickerSpeed', ''));
+          autoClickerRate += speedIncrease;
+        }
+        upgradeCosts[id] *= 2; // Double the cost for the next purchase
+        this.textContent = text + ' (Cost: ' + upgradeCosts[id] + ' points)';
+        updatePointsDisplay();
+      } else {
+        alert('Not enough points for ' + text + '!');
+      }
+    });
+    return button;
+  }
+
+  // Add the new upgrade buttons to the sidebar
+  let sidebar = document.getElementById('sidebar');
+  sidebar.appendChild(createUpgradeButton('clickMultiplier2', 'Double Click Points'));
+  sidebar.appendChild(createUpgradeButton('clickMultiplier5', 'Quintuple Click Points'));
+  sidebar.appendChild(createUpgradeButton('clickMultiplier10', 'Decuple Click Points'));
+  sidebar.appendChild(createUpgradeButton('autoClickerSpeed2', 'Double Auto-Clicker Speed'));
+  sidebar.appendChild(createUpgradeButton('autoClickerSpeed5', 'Quintuple Auto-Clicker Speed'));
+  // ... add more buttons as needed ...
+
+  // ... rest of the existing script ...
+</script>
+</body>
+</html>
 
 
