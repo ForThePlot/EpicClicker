@@ -13,13 +13,75 @@
     font-size: 24px;
     font-weight: bold;
     position: absolute;
-    bottom: 10px;
+    bottum: 10px;
     left: 10px;
   }
-  #clicker {
-    margin: 100px;
+  #game-container {
+    margin-top: 50px;
+    text-align: center;
   }
 </style>
 </head>
 <body>
+<div id="points">Points: 0</div>
+<div id="game-container">
+  <button id="clicker">Click me!</button>
+  <div id="upgrade-section">
+    <button class="upgrade" data-cost="10" data-multiplier="2">Double Points (Cost: 10 points)</button>
+    <button class="upgrade" data-cost="50" data-multiplier="5">Quintuple Points (Cost: 50 points)</button>
+    <button class="upgrade" data-cost="100" data-multiplier="10">Decuple Points (Cost: 100 points)</button>
+    <!-- Add more upgrades as you like -->
+  </div>
+  <button id="auto-clicker">Buy Auto-Clicker (Cost: 100 points)</button>
+</div>
+
+<script>
+  let points = 0;
+  let pointsPerClick = 1;
+  let autoClickerCost = 100;
+  let autoClickerRate = 0;
+
+  document.getElementById('clicker').addEventListener('click', function() {
+    points += pointsPerClick;
+    updatePointsDisplay();
+  });
+
+  document.querySelectorAll('.upgrade').forEach(button => {
+    button.addEventListener('click', function() {
+      const cost = parseInt(this.getAttribute('data-cost'));
+      const multiplier = parseInt(this.getAttribute('data-multiplier'));
+
+      if (points >= cost) {
+        points -= cost;
+        pointsPerClick *= multiplier;
+        this.disabled = true;
+        updatePointsDisplay();
+      } else {
+        alert('Not enough points for upgrade!');
+      }
+    });
+  });
+
+  document.getElementById('auto-clicker').addEventListener('click', function() {
+    if (points >= autoClickerCost) {
+      points -= autoClickerCost;
+      autoClickerRate += 1;
+      autoClickerCost *= 2;
+      this.textContent = 'Buy Auto-Clicker (Cost: ' + autoClickerCost + ' points)';
+      updatePointsDisplay();
+    } else {
+      alert('Not enough points for Auto-Clicker!');
+    }
+  });
+
+  setInterval(function() {
+    points += autoClickerRate;
+    updatePointsDisplay();
+  }, 1000);
+
+  function updatePointsDisplay() {
+    document.getElementById('points').textContent = 'Points: ' + points;
+  }
+</script>
+</body>
 </html>
