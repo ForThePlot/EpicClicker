@@ -42,9 +42,9 @@
 
   clickable.addEventListener('click', function() {
     clickCount++;
-    if (clickCount >= 10) {
+    if (clickCount >= 100) {
       clickable.classList.add('exploded');
-      clickable.textContent = 'BOOM!';
+      clickable.textContent = 'Thank you so much for playing!';
     } else {
       const maxX = gameContainer.clientWidth - clickable.clientWidth;
       const maxY = gameContainer.clientHeight - clickable.clientHeight;
