@@ -1,7 +1,7 @@
 <h1><b>Hello</b></h1>
 <h2>Coding is very difficult, but even basic things can be cool. Check this out.</h2>
 <img src="https://images.pexels.com/photos/19987317/pexels-photo-19987317/free-photo-of-ceiling-of-the-library-at-the-university-of-cambridge.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"alt="This is a really cool picture.">
-<h2>This blue button is a small game for you to play coded by ai! Try it out.</h2>
+<h2>Check out this cool game that I made using AI</h2>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,47 +9,42 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Clicker Game</title>
 <style>
-  .game-container {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-  }
-  .clickable {
+  #points {
+    font-size: 24px;
+    font-weight: bold;
     position: absolute;
-    width: 50px;
-    height: 50px;
-    background-color: blue;
-    border-radius: 50%;
-    cursor: pointer;
-    user-select: none;
+    top: 10px;
+    left: 10px;
   }
-  .exploded {
-    background-color: red;
+  #clicker {
+    margin: 100px;
   }
 </style>
 </head>
 <body>
-<div class="game-container" id="gameContainer">
-  <div class="clickable" id="clickable"></div>
-</div>
+<div id="points">Points: 0</div>
+<button id="clicker">Click me!</button>
+<button id="upgrade">Upgrade (Cost: 10 points)</button>
 
 <script>
-  let clickCount = 0;
-  const clickable = document.getElementById('clickable');
-  const gameContainer = document.getElementById('gameContainer');
+  let points = 0;
+  let pointsPerClick = 1;
+  let upgradeCost = 10;
 
-  clickable.addEventListener('click', function() {
-    clickCount++;
-    if (clickCount >= 100) {
-      clickable.classList.add('exploded');
-      clickable.textContent = 'Thank you so much for playing!';
+  document.getElementById('clicker').addEventListener('click', function() {
+    points += pointsPerClick;
+    document.getElementById('points').textContent = 'Points: ' + points;
+  });
+
+  document.getElementById('upgrade').addEventListener('click', function() {
+    if (points >= upgradeCost) {
+      points -= upgradeCost;
+      pointsPerClick++;
+      upgradeCost *= 2; // Increase the cost for the next upgrade
+      document.getElementById('points').textContent = 'Points: ' + points;
+      this.textContent = 'Upgrade (Cost: ' + upgradeCost + ' points)';
     } else {
-      const maxX = gameContainer.clientWidth - clickable.clientWidth;
-      const maxY = gameContainer.clientHeight - clickable.clientHeight;
-      const newX = Math.random() * maxX;
-      const newY = Math.random() * maxY;
-      clickable.style.left = newX + 'px';
-      clickable.style.top = newY + 'px';
+      alert('Not enough points for upgrade!');
     }
   });
 </script>
