@@ -47,6 +47,39 @@
       alert('Not enough points for upgrade!');
     }
   });
+  <!-- Add this section within the <body> tag of your HTML document -->
+<div id="auto-clicker-section">
+  <button id="auto-clicker">Buy Auto-Clicker (Cost: 100 points)</button>
+</div>
+
+<script>
+// Add these variables at the beginning of your script
+let autoClickerCost = 100;
+let autoClickerRate = 0;
+
+// Add this function to handle the purchase of auto-clickers
+function purchaseAutoClicker() {
+  if (points >= autoClickerCost) {
+    points -= autoClickerCost;
+    autoClickerRate += 1; // Increase the rate of auto-clicking
+    autoClickerCost *= 2; // Increase the cost for the next auto-clicker
+    document.getElementById('points').textContent = 'Points: ' + points;
+    document.getElementById('auto-clicker').textContent = 'Buy Auto-Clicker (Cost: ' + autoClickerCost + ' points)';
+  } else {
+    alert('Not enough points for Auto-Clicker!');
+  }
+}
+
+// Call this function when the auto-clicker button is clicked
+document.getElementById('auto-clicker').addEventListener('click', purchaseAutoClicker);
+
+// Add this interval to increment points every second based on the auto-clicker rate
+setInterval(function() {
+  points += autoClickerRate;
+  document.getElementById('points').textContent = 'Points: ' + points;
+}, 1000); // 1000 milliseconds = 1 second
+
+</script>
 </script>
 </body>
 </html>
