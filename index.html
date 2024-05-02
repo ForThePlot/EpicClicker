@@ -1,7 +1,3 @@
-<h1><b>Hello</b></h1>
-<h2>Coding is very difficult, but even basic things can be cool. Check this out.</h2>
-<img src="https://images.pexels.com/photos/19987317/pexels-photo-19987317/free-photo-of-ceiling-of-the-library-at-the-university-of-cambridge.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"alt="This is a really cool picture.">
-<h2>Check out this cool game that I made using AI</h2>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,16 +5,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Clicker Game</title>
 <style>
+  body {
+    display: flex;
+    justify-content: space-between;
+  }
   #points {
     font-size: 24px;
     font-weight: bold;
-    position: absolute;
+    position: fixed;
     top: 10px;
     left: 10px;
   }
   #game-container {
     margin-top: 50px;
     text-align: center;
+  }
+  #sidebar {
+    width: 200px;
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: #f0f0f0;
+    padding: 10px;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.2);
   }
   #clicker {
     font-size: 48px;
@@ -29,22 +39,23 @@
 <div id="points">Points: 0</div>
 <div id="game-container">
   <button id="clicker">👍</button>
-  <div id="upgrade-section">
-    <!-- Make these upgrades more expensive -->
-    <button class="upgrade" data-cost="1000" data-multiplier="2">Double Points (Cost: 1000 points)</button>
-    <button class="upgrade" data-cost="5000" data-multiplier="5">Quintuple Points (Cost: 5000 points)</button>
-    <!-- Add more expensive upgrades as you like -->
-  </div>
-  <button id="auto-clicker">Buy Auto-Clicker (Cost: 100 points)</button>
-  <button id="auto-clicker-upgrade">Upgrade Auto-Clicker (Cost: 200 points)</button>
+  <button id="auto-clicker">Buy Auto-Clicker (Cost: 50 points)</button>
+</div>
+<div id="sidebar">
+  <h3>Upgrades</h3>
+  <!-- Halved the cost of these upgrades -->
+  <button class="upgrade" data-cost="250" data-multiplier="2">Double Points (Cost: 250 points)</button>
+  <button class="upgrade" data-cost="1250" data-multiplier="5">Quintuple Points (Cost: 1250 points)</button>
+  <button id="auto-clicker-upgrade">Upgrade Auto-Clicker (Cost: 100 points)</button>
+  <!-- Add more upgrades as you like -->
 </div>
 
 <script>
   let points = 0;
   let pointsPerClick = 1;
-  let autoClickerCost = 100;
+  let autoClickerCost = 50; // Cost of auto-clickers set to 50
   let autoClickerRate = 0;
-  let autoClickerUpgradeCost = 200;
+  let autoClickerUpgradeCost = 100; // Cost of auto-clicker upgrade set to 100
 
   document.getElementById('clicker').addEventListener('click', function() {
     points += pointsPerClick;
@@ -81,8 +92,8 @@
   document.getElementById('auto-clicker-upgrade').addEventListener('click', function() {
     if (points >= autoClickerUpgradeCost) {
       points -= autoClickerUpgradeCost;
-      autoClickerRate *= 2; // Double the output of the auto-clicker
-      autoClickerUpgradeCost *= 2; // Increase the cost for the next upgrade
+      autoClickerRate *= 3; // Triple the output of the auto-clicker
+      autoClickerUpgradeCost *= 3; // Increase the cost for the next upgrade
       this.textContent = 'Upgrade Auto-Clicker (Cost: ' + autoClickerUpgradeCost + ' points)';
       updatePointsDisplay();
     } else {
