@@ -13,26 +13,30 @@
     font-size: 24px;
     font-weight: bold;
     position: absolute;
-    bottum: 10px;
+    top: 10px;
     left: 10px;
   }
   #game-container {
     margin-top: 50px;
     text-align: center;
   }
+  #clicker {
+    font-size: 48px;
+  }
 </style>
 </head>
 <body>
 <div id="points">Points: 0</div>
 <div id="game-container">
-  <button id="clicker">Click me!</button>
+  <button id="clicker">👍</button>
   <div id="upgrade-section">
-    <button class="upgrade" data-cost="10" data-multiplier="2">Double Points (Cost: 10 points)</button>
-    <button class="upgrade" data-cost="50" data-multiplier="5">Quintuple Points (Cost: 50 points)</button>
-    <button class="upgrade" data-cost="100" data-multiplier="10">Decuple Points (Cost: 100 points)</button>
-    <!-- Add more upgrades as you like -->
+    <!-- Make these upgrades more expensive -->
+    <button class="upgrade" data-cost="1000" data-multiplier="2">Double Points (Cost: 1000 points)</button>
+    <button class="upgrade" data-cost="5000" data-multiplier="5">Quintuple Points (Cost: 5000 points)</button>
+    <!-- Add more expensive upgrades as you like -->
   </div>
   <button id="auto-clicker">Buy Auto-Clicker (Cost: 100 points)</button>
+  <button id="auto-clicker-upgrade">Upgrade Auto-Clicker (Cost: 200 points)</button>
 </div>
 
 <script>
@@ -40,6 +44,7 @@
   let pointsPerClick = 1;
   let autoClickerCost = 100;
   let autoClickerRate = 0;
+  let autoClickerUpgradeCost = 200;
 
   document.getElementById('clicker').addEventListener('click', function() {
     points += pointsPerClick;
@@ -54,7 +59,7 @@
       if (points >= cost) {
         points -= cost;
         pointsPerClick *= multiplier;
-        this.disabled = true;
+        this.disabled = true; // Disable the button after purchase
         updatePointsDisplay();
       } else {
         alert('Not enough points for upgrade!');
@@ -66,11 +71,22 @@
     if (points >= autoClickerCost) {
       points -= autoClickerCost;
       autoClickerRate += 1;
-      autoClickerCost *= 2;
-      this.textContent = 'Buy Auto-Clicker (Cost: ' + autoClickerCost + ' points)';
+      this.disabled = true; // Make auto-clicker a one-time purchase
       updatePointsDisplay();
     } else {
       alert('Not enough points for Auto-Clicker!');
+    }
+  });
+
+  document.getElementById('auto-clicker-upgrade').addEventListener('click', function() {
+    if (points >= autoClickerUpgradeCost) {
+      points -= autoClickerUpgradeCost;
+      autoClickerRate *= 2; // Double the output of the auto-clicker
+      autoClickerUpgradeCost *= 2; // Increase the cost for the next upgrade
+      this.textContent = 'Upgrade Auto-Clicker (Cost: ' + autoClickerUpgradeCost + ' points)';
+      updatePointsDisplay();
+    } else {
+      alert('Not enough points for Auto-Clicker Upgrade!');
     }
   });
 
