@@ -5,22 +5,38 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Clicker Game</title>
 <style>
+  body {
+    font-family: Arial, sans-serif;
+  }
   #game-container {
     text-align: center;
+    position: relative;
+    padding-bottom: 100px; /* Space for bottom sidebar */
   }
-  #clicker-button {
-    font-size: 3em;
-    padding: 10px;
+  button {
+    font-size: 2em; /* Larger buttons */
+    padding: 20px;
+    margin: 10px;
   }
   #upgrades-container {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #f8f8f8;
+    border-top: 1px solid #ccc;
+    padding: 10px 0;
+  }
+  #reset-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
   }
 </style>
 </head>
 <body>
 <div id="game-container">
+  <button id="reset-button" onclick="resetGame()">Reset</button>
   <button id="clicker-button" onclick="updateScore()">👍</button>
   <div id="score-container">Score: <span id="score">0</span></div>
   <div id="upgrades-container">
@@ -30,24 +46,26 @@
 
 <script>
   let score = 0;
+  let scorePerClick = 1;
+  let autoClickerInterval;
   const scoreDisplay = document.getElementById('score');
   const upgradesContainer = document.getElementById('upgrades-container');
 
   // Function to update the score
   function updateScore() {
-    score++;
+    score += scorePerClick;
     scoreDisplay.textContent = score;
   }
 
   // Function to add upgrades
-  function addUpgrade(name, cost) {
+  function addUpgrade(name, cost, effect) {
     const upgrade = document.createElement('button');
     upgrade.textContent = `${name} - Cost: ${cost}`;
     upgrade.onclick = function() {
       if (score >= cost) {
         score -= cost;
-        // Implement the upgrade effect here
-        console.log(`${name} upgrade purchased!`);
+        effect();
+        upgrade.remove(); // Remove the upgrade after purchase
       } else {
         console.log('Not enough score to purchase this upgrade.');
       }
@@ -55,12 +73,36 @@
     upgradesContainer.appendChild(upgrade);
   }
 
-  // Add 10 different upgrades
-  for (let i = 1; i <= 10; i++) {
-    addUpgrade(`Upgrade ${i}`, i * 10);
+  // One-time upgrades
+  addUpgrade('Double Click', 50, function() {
+    scorePerClick *= 2;
+    console.log('Double Click upgrade purchased!');
+  });
+
+  addUpgrade('Triple Click', 150, function() {
+    scorePerClick *= 3;
+    console.log('Triple Click upgrade purchased!');
+  });
+
+  // Auto Clicker upgrade
+  addUpgrade('Auto Clicker', 100, function() {
+    if (!autoClickerInterval) {
+      autoClickerInterval = setInterval(updateScore, 1000);
+      console.log('Auto Clicker upgrade purchased!');
+    }
+  });
+
+  // Function to reset the game
+  function resetGame() {
+    score = 0;
+    scorePerClick = 1;
+    scoreDisplay.textContent = score;
+    clearInterval(autoClickerInterval);
+    autoClickerInterval = null;
+    // Reset other upgrades as needed
+    console.log('Game has been reset.');
   }
 </script>
 </body>
 </html>
-
 
