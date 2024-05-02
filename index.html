@@ -7,31 +7,37 @@
 <style>
   body {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
   }
   #points {
-    font-size: 24px;
+    font-size: 48px;
     font-weight: bold;
-    position: fixed;
-    top: 10px;
-    left: 10px;
+    margin-bottom: 20px;
   }
   #game-container {
-    margin-top: 50px;
     text-align: center;
   }
   #sidebar {
-    width: 200px;
+    width: 300px;
     position: fixed;
-    right: 0;
+    left: 0;
     top: 0;
     bottom: 0;
     background-color: #f0f0f0;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+  }
+  button {
+    font-size: 24px;
     padding: 10px;
-    box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+    margin: 5px;
   }
   #clicker {
-    font-size: 48px;
+    font-size: 64px;
   }
 </style>
 </head>
@@ -39,13 +45,10 @@
 <div id="points">Points: 0</div>
 <div id="game-container">
   <button id="clicker">👍</button>
-  <button id="auto-clicker">Buy Auto-Clicker (Cost: 50 points)</button>
 </div>
 <div id="sidebar">
   <h3>Upgrades</h3>
-  <!-- Halved the cost of these upgrades -->
-  <button class="upgrade" data-cost="250" data-multiplier="2">Double Points (Cost: 250 points)</button>
-  <button class="upgrade" data-cost="1250" data-multiplier="5">Quintuple Points (Cost: 1250 points)</button>
+  <button id="auto-clicker">Buy Auto-Clicker (Cost: 50 points)</button>
   <button id="auto-clicker-upgrade">Upgrade Auto-Clicker (Cost: 100 points)</button>
   <!-- Add more upgrades as you like -->
 </div>
@@ -53,37 +56,26 @@
 <script>
   let points = 0;
   let pointsPerClick = 1;
-  let autoClickerCost = 50; // Cost of auto-clickers set to 50
+  let autoClickerCost = 50;
   let autoClickerRate = 0;
-  let autoClickerUpgradeCost = 100; // Cost of auto-clicker upgrade set to 100
+  let autoClickerCount = 0;
+  let autoClickerUpgradeCost = 100;
 
   document.getElementById('clicker').addEventListener('click', function() {
     points += pointsPerClick;
     updatePointsDisplay();
   });
 
-  document.querySelectorAll('.upgrade').forEach(button => {
-    button.addEventListener('click', function() {
-      const cost = parseInt(this.getAttribute('data-cost'));
-      const multiplier = parseInt(this.getAttribute('data-multiplier'));
-
-      if (points >= cost) {
-        points -= cost;
-        pointsPerClick *= multiplier;
-        this.disabled = true; // Disable the button after purchase
-        updatePointsDisplay();
-      } else {
-        alert('Not enough points for upgrade!');
-      }
-    });
-  });
-
   document.getElementById('auto-clicker').addEventListener('click', function() {
-    if (points >= autoClickerCost) {
+    if (points >= autoClickerCost && autoClickerCount < 10) {
       points -= autoClickerCost;
       autoClickerRate += 1;
-      this.disabled = true; // Make auto-clicker a one-time purchase
+      autoClickerCount++;
+      autoClickerCost *= 2; // Double the cost for the next auto-clicker
+      this.textContent = 'Buy Auto-Clicker (Cost: ' + autoClickerCost + ' points)';
       updatePointsDisplay();
+    } else if (autoClickerCount >= 10) {
+      alert('Maximum Auto-Clickers purchased!');
     } else {
       alert('Not enough points for Auto-Clicker!');
     }
@@ -93,7 +85,7 @@
     if (points >= autoClickerUpgradeCost) {
       points -= autoClickerUpgradeCost;
       autoClickerRate *= 3; // Triple the output of the auto-clicker
-      autoClickerUpgradeCost *= 3; // Increase the cost for the next upgrade
+      autoClickerUpgradeCost *= 2; // Double the cost for the next upgrade
       this.textContent = 'Upgrade Auto-Clicker (Cost: ' + autoClickerUpgradeCost + ' points)';
       updatePointsDisplay();
     } else {
