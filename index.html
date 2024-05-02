@@ -41,13 +41,9 @@
     padding: 15px;
     margin: 5px;
   }
-  #reset-button {
+  #reset-button, #smiley-button, #thumbs-up-button {
     align-self: flex-end;
     margin: 20px;
-  }
-  #smiley-button {
-    align-self: flex-end;
-    margin-right: 20px;
   }
 </style>
 </head>
@@ -61,6 +57,7 @@
 </div>
 <button id="reset-button" onclick="resetGame()">Reset</button>
 <button id="smiley-button" onclick="makeSmiley()">😊</button>
+<button id="thumbs-up-button" onclick="makeThumbsUp()">👍</button>
 
 <script>
   let score = 0;
@@ -93,15 +90,12 @@
   }
 
   // One-time upgrades
-  addUpgrade('Double Click', 50, function() {
-    scorePerClick *= 2;
-    console.log('Double Click upgrade purchased!');
-  });
-
-  addUpgrade('Triple Click', 150, function() {
-    scorePerClick *= 3;
-    console.log('Triple Click upgrade purchased!');
-  });
+  for (let i = 1; i <= 5; i++) {
+    addUpgrade(`Double Score ${i}`, 50 * i, function() {
+      scorePerClick *= 2;
+      console.log('Double Score upgrade purchased!');
+    });
+  }
 
   // Auto Clicker upgrade
   addUpgrade('Auto Clicker', 100, function() {
@@ -127,9 +121,12 @@
     clickerButton.textContent = '😊';
     clickerButton.onclick = updateScore; // Keep the score updating functionality
   }
+
+  // Function to change the clicker button back to a thumbs up
+  function makeThumbsUp() {
+    clickerButton.textContent = '👍';
+    clickerButton.onclick = updateScore; // Keep the score updating functionality
+  }
 </script>
 </body>
 </html>
-
-</html>
-
