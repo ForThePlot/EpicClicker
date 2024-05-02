@@ -21,15 +21,21 @@
   #game-container {
     text-align: center;
   }
-  #sidebar {
+  #sidebar, #reset-container {
     width: 300px;
     position: fixed;
-    left: 0;
     top: 0;
     bottom: 0;
-    background-color: #f0f0f0;
     padding: 20px;
     box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+  }
+  #sidebar {
+    left: 0;
+    background-color: #f0f0f0;
+  }
+  #reset-container {
+    right: 0;
+    background-color: #ffdddd;
   }
   button {
     font-size: 24px;
@@ -38,6 +44,10 @@
   }
   #clicker {
     font-size: 64px;
+  }
+  #reset {
+    background-color: red;
+    color: white;
   }
 </style>
 </head>
@@ -48,9 +58,13 @@
 </div>
 <div id="sidebar">
   <h3>Upgrades</h3>
+  <button id="triple-click-upgrade">Triple Click (Cost: 25 points)</button>
   <button id="auto-clicker">Buy Auto-Clicker (Cost: 50 points)</button>
   <button id="auto-clicker-upgrade">Upgrade Auto-Clicker (Cost: 100 points)</button>
   <!-- Add more upgrades as you like -->
+</div>
+<div id="reset-container">
+  <button id="reset">Reset Game</button>
 </div>
 
 <script>
@@ -60,10 +74,23 @@
   let autoClickerRate = 0;
   let autoClickerCount = 0;
   let autoClickerUpgradeCost = 100;
+  let tripleClickUpgradeCost = 25;
 
   document.getElementById('clicker').addEventListener('click', function() {
     points += pointsPerClick;
     updatePointsDisplay();
+  });
+
+  document.getElementById('triple-click-upgrade').addEventListener('click', function() {
+    if (points >= tripleClickUpgradeCost) {
+      points -= tripleClickUpgradeCost;
+      pointsPerClick *= 3;
+      tripleClickUpgradeCost *= 2;
+      this.textContent = 'Triple Click (Cost: ' + tripleClickUpgradeCost + ' points)';
+      updatePointsDisplay();
+    } else {
+      alert('Not enough points for Triple Click Upgrade!');
+    }
   });
 
   document.getElementById('auto-clicker').addEventListener('click', function() {
@@ -71,7 +98,7 @@
       points -= autoClickerCost;
       autoClickerRate += 1;
       autoClickerCount++;
-      autoClickerCost *= 2; // Double the cost for the next auto-clicker
+      autoClickerCost *= 2;
       this.textContent = 'Buy Auto-Clicker (Cost: ' + autoClickerCost + ' points)';
       updatePointsDisplay();
     } else if (autoClickerCount >= 10) {
@@ -84,13 +111,32 @@
   document.getElementById('auto-clicker-upgrade').addEventListener('click', function() {
     if (points >= autoClickerUpgradeCost) {
       points -= autoClickerUpgradeCost;
-      autoClickerRate *= 3; // Triple the output of the auto-clicker
-      autoClickerUpgradeCost *= 2; // Double the cost for the next upgrade
+      autoClickerRate *= 3;
+      autoClickerUpgradeCost *= 2;
       this.textContent = 'Upgrade Auto-Clicker (Cost: ' + autoClickerUpgradeCost + ' points)';
       updatePointsDisplay();
     } else {
       alert('Not enough points for Auto-Clicker Upgrade!');
     }
+  });
+
+  document.getElementById('reset').addEventListener('click', function() {
+    // Reset all game variables
+    points = 0;
+    pointsPerClick = 1;
+    autoClickerCost = 50;
+    autoClickerRate = 0;
+    autoClickerCount = 0;
+    autoClickerUpgradeCost = 100;
+    tripleClickUpgradeCost = 25;
+    document.getElementById('auto-clicker').textContent = 'Buy Auto-Clicker (Cost: 50 points)';
+    document.getElementById('auto-clicker-upgrade').textContent = 'Upgrade Auto-Clicker (Cost: 100 points)';
+    document.getElementById('triple-click-upgrade').textContent = 'Triple Click (Cost: 25 points)';
+    updatePointsDisplay();
+    // Re-enable all buttons
+    document.querySelectorAll('button').forEach(button => {
+      button.disabled = false;
+    });
   });
 
   setInterval(function() {
