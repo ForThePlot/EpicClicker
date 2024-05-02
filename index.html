@@ -13,8 +13,8 @@
     font-size: 24px;
     font-weight: bold;
     position: absolute;
-    bottom: 10px;
-    middle: 10px;
+    top: 10px;
+    left: 10px;
   }
   #game-container {
     margin-top: 50px;
@@ -31,20 +31,20 @@
   <button id="clicker">👍</button>
   <div id="upgrade-section">
     <!-- Make these upgrades more expensive -->
-    <button class="upgrade" data-cost="500" data-multiplier="2">Double Points (Cost: 500 points)</button>
-    <button class="upgrade" data-cost="2500" data-multiplier="5">Quintuple Points (Cost: 2500 points)</button>
+    <button class="upgrade" data-cost="1000" data-multiplier="2">Double Points (Cost: 1000 points)</button>
+    <button class="upgrade" data-cost="5000" data-multiplier="5">Quintuple Points (Cost: 5000 points)</button>
     <!-- Add more expensive upgrades as you like -->
   </div>
-  <button id="auto-clicker">Buy Auto-Clicker (Cost: 50 points)</button>
-  <button id="auto-clicker-upgrade">Upgrade Auto-Clicker (Cost: 50 points)</button>
+  <button id="auto-clicker">Buy Auto-Clicker (Cost: 100 points)</button>
+  <button id="auto-clicker-upgrade">Upgrade Auto-Clicker (Cost: 200 points)</button>
 </div>
 
 <script>
   let points = 0;
   let pointsPerClick = 1;
-  let autoClickerCost = 50;
+  let autoClickerCost = 100;
   let autoClickerRate = 0;
-  let autoClickerUpgradeCost = 100;
+  let autoClickerUpgradeCost = 200;
 
   document.getElementById('clicker').addEventListener('click', function() {
     points += pointsPerClick;
@@ -81,7 +81,7 @@
   document.getElementById('auto-clicker-upgrade').addEventListener('click', function() {
     if (points >= autoClickerUpgradeCost) {
       points -= autoClickerUpgradeCost;
-      autoClickerRate *= 3; // Double the output of the auto-clicker
+      autoClickerRate *= 2; // Double the output of the auto-clicker
       autoClickerUpgradeCost *= 2; // Increase the cost for the next upgrade
       this.textContent = 'Upgrade Auto-Clicker (Cost: ' + autoClickerUpgradeCost + ' points)';
       updatePointsDisplay();
