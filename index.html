@@ -52,6 +52,7 @@
     position: fixed;
     font-size: 2em;
     animation: fadeOut 2s forwards;
+    pointer-events: none; /* Make the pop-ups non-interactive */
   }
   @keyframes fadeOut {
     to {
@@ -159,5 +160,8 @@
     clickerButton.onclick = updateScore; // Keep the score updating functionality
   }
 </script>
+</body>
+</html>
+
 </body>
 </html>
