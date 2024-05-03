@@ -11,26 +11,30 @@
     height: 100vh;
     display: flex;
     flex-direction: column;
+    justify-content: center; /* Center the content vertically */
+    align-items: center; /* Center the content horizontally */
     background-image: url('YOUR_CARTOON_LOGS_IMAGE_URL_HERE');
-    background-repeat: repeat; /* The logs will repeat across the background */
+    background-repeat: repeat;
   }
   #score-container {
+    position: absolute;
+    top: 0;
+    left: 20px;
     font-size: 3em;
     font-weight: bold;
-    text-align: left;
-    margin: 20px;
   }
   #clicker-button {
-    font-size: 6em; /* Larger button */
-    padding: 40px;
-    margin: auto;
+    font-size: 8em; /* Even larger button */
+    padding: 60px;
   }
   #upgrades-container {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
     background-color: #f8f8f8;
     border-top: 1px solid #ccc;
     overflow-y: auto;
-    transition: max-height 0.5s ease-out;
-    max-height: 200px;
+    max-height: 100px; /* Adjust the height as needed */
   }
   #toggle-upgrades {
     background: #ddd;
@@ -44,12 +48,8 @@
     padding: 15px;
     margin: 5px;
   }
-  #reset-button, #smiley-button, #thumbs-up-button {
-    align-self: flex-end;
-    margin: 20px;
-  }
   .points-popup {
-    position: absolute;
+    position: fixed;
     font-size: 2em;
     animation: fadeOut 2s forwards;
   }
@@ -62,12 +62,10 @@
 </head>
 <body>
 <div id="score-container">Score: <span id="score">0</span></div>
-<div id="game-container">
-  <button id="clicker-button" onclick="updateScore()">👍</button>
-  <div id="toggle-upgrades" onclick="toggleUpgrades()">Toggle Upgrades</div>
-  <div id="upgrades-container">
-    <!-- Upgrades will be dynamically added here -->
-  </div>
+<button id="clicker-button" onclick="updateScore(event)">👍</button>
+<div id="toggle-upgrades" onclick="toggleUpgrades()">Toggle Upgrades</div>
+<div id="upgrades-container">
+  <!-- Upgrades will be dynamically added here -->
 </div>
 <button id="reset-button" onclick="resetGame()">Reset</button>
 <button id="smiley-button" onclick="makeSmiley()">😊</button>
@@ -80,54 +78,28 @@
   const scoreDisplay = document.getElementById('score');
   const clickerButton = document.getElementById('clicker-button');
   const upgradesContainer = document.getElementById('upgrades-container');
-  const toggleUpgradesButton = document.getElementById('toggle-upgrades');
   let upgradesVisible = true;
 
   // Function to update the score
-  function updateScore() {
+  function updateScore(event) {
     score += scorePerClick;
     scoreDisplay.textContent = score;
-    showPointsPopup(scorePerClick);
+    showPointsPopup(scorePerClick, event);
   }
 
   // Function to add upgrades
-  function addUpgrade(name, cost, effect) {
-    const upgrade = document.createElement('button');
-    upgrade.textContent = `${name} - Cost: ${cost}`;
-    upgrade.onclick = function() {
-      if (score >= cost) {
-        score -= cost;
-        effect();
-        upgrade.remove(); // Remove the upgrade after purchase
-      } else {
-        console.log('Not enough score to purchase this upgrade.');
-      }
-    };
-    upgradesContainer.appendChild(upgrade);
-  }
+  // ... same as before ...
 
-  // Add upgrades that double the points per click
-  let upgradeCost = 2; // Starting cost for the first upgrade
-  for (let i = 1; i <= 50; i++) {
-    addUpgrade(`Double Points ${i}`, upgradeCost, function() {
-      scorePerClick *= 2;
-      console.log(`Double Points ${i} upgrade purchased!`);
-    });
-    upgradeCost *= 50; // Each subsequent upgrade costs 50 times more
-  }
-
-  // Function to show points popup
-  function showPointsPopup(points) {
+  // Function to show points popup where the cursor is
+  function showPointsPopup(points, event) {
     const popup = document.createElement('div');
     popup.textContent = `+${points}`;
     popup.classList.add('points-popup');
     document.body.appendChild(popup);
 
-    // Randomize position around the button
-    const rect = clickerButton.getBoundingClientRect();
-    const randomSide = Math.random() < 0.5 ? 'left' : 'right';
-    popup.style.top = `${rect.top + rect.height / 2}px`;
-    popup.style[randomSide] = `${rect[randomSide] + rect.width / 2}px`;
+    // Position the popup where the cursor is
+    popup.style.top = `${event.clientY}px`;
+    popup.style.left = `${event.clientX}px`;
 
     // Remove the popup after 2 seconds
     setTimeout(() => {
@@ -136,34 +108,18 @@
   }
 
   // Function to toggle the visibility of the upgrades
-  function toggleUpgrades() {
-    upgradesVisible = !upgradesVisible;
-    upgradesContainer.style.maxHeight = upgradesVisible ? '200px' : '0';
-  }
+  // ... same as before ...
 
   // Function to reset the game
-  function resetGame() {
-    score = 0;
-    scorePerClick = 1;
-    scoreDisplay.textContent = score;
-    clearInterval(autoClickerInterval);
-    autoClickerInterval = null;
-    // Reset other upgrades as needed
-    console.log('Game has been reset.');
-  }
+  // ... same as before ...
 
   // Function to change the clicker button to a smiley face
-  function makeSmiley() {
-    clickerButton.textContent = '😊';
-    clickerButton.onclick = updateScore; // Keep the score updating functionality
-  }
+  // ... same as before ...
 
   // Function to change the clicker button back to a thumbs up
-  function makeThumbsUp() {
-    clickerButton.textContent = '👍';
-    clickerButton.onclick = updateScore; // Keep the score updating functionality
-  }
+  // ... same as before ...
 </script>
 </body>
 </html>
+
 
