@@ -11,6 +11,8 @@
     height: 100vh;
     display: flex;
     flex-direction: column;
+    background-image: url('YOUR_CARTOON_LOGS_IMAGE_URL_HERE');
+    background-repeat: repeat; /* The logs will repeat across the background */
   }
   #score-container {
     font-size: 3em;
@@ -19,16 +21,16 @@
     margin: 20px;
   }
   #clicker-button {
-    font-size: 4em;
-    padding: 30px;
+    font-size: 6em; /* Larger button */
+    padding: 40px;
     margin: auto;
   }
   #upgrades-container {
     background-color: #f8f8f8;
     border-top: 1px solid #ccc;
-    overflow-y: auto; /* Make it scrollable */
+    overflow-y: auto;
     transition: max-height 0.5s ease-out;
-    max-height: 200px; /* Adjust as needed */
+    max-height: 200px;
   }
   #toggle-upgrades {
     background: #ddd;
@@ -45,6 +47,16 @@
   #reset-button, #smiley-button, #thumbs-up-button {
     align-self: flex-end;
     margin: 20px;
+  }
+  .points-popup {
+    position: absolute;
+    font-size: 2em;
+    animation: fadeOut 2s forwards;
+  }
+  @keyframes fadeOut {
+    to {
+      opacity: 0;
+    }
   }
 </style>
 </head>
@@ -75,6 +87,7 @@
   function updateScore() {
     score += scorePerClick;
     scoreDisplay.textContent = score;
+    showPointsPopup(scorePerClick);
   }
 
   // Function to add upgrades
@@ -101,6 +114,25 @@
       console.log(`Double Points ${i} upgrade purchased!`);
     });
     upgradeCost *= 50; // Each subsequent upgrade costs 50 times more
+  }
+
+  // Function to show points popup
+  function showPointsPopup(points) {
+    const popup = document.createElement('div');
+    popup.textContent = `+${points}`;
+    popup.classList.add('points-popup');
+    document.body.appendChild(popup);
+
+    // Randomize position around the button
+    const rect = clickerButton.getBoundingClientRect();
+    const randomSide = Math.random() < 0.5 ? 'left' : 'right';
+    popup.style.top = `${rect.top + rect.height / 2}px`;
+    popup.style[randomSide] = `${rect[randomSide] + rect.width / 2}px`;
+
+    // Remove the popup after 2 seconds
+    setTimeout(() => {
+      popup.remove();
+    }, 2000);
   }
 
   // Function to toggle the visibility of the upgrades
@@ -134,3 +166,4 @@
 </script>
 </body>
 </html>
+
