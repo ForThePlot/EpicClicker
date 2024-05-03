@@ -11,14 +11,14 @@
     height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Center the content vertically */
-    align-items: center; /* Center the content horizontally */
+    justify-content: center;
+    align-items: center;
     background-image: url('YOUR_CARTOON_LOGS_IMAGE_URL_HERE');
     background-repeat: repeat;
-    -webkit-user-select: none; /* Safari */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Chrome, Opera, and non-prefixed browsers */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
   }
   #score-container {
     position: absolute;
@@ -28,7 +28,7 @@
     font-weight: bold;
   }
   #clicker-button {
-    font-size: 8em; /* Even larger button */
+    font-size: 8em;
     padding: 60px;
   }
   #upgrades-container {
@@ -38,7 +38,7 @@
     background-color: #f8f8f8;
     border-top: 1px solid #ccc;
     overflow-y: auto;
-    max-height: 100px; /* Adjust the height as needed */
+    max-height: 100px;
   }
   #toggle-upgrades {
     background: #ddd;
@@ -56,7 +56,7 @@
     position: fixed;
     font-size: 2em;
     animation: fadeOut 2s forwards;
-    pointer-events: none; /* Make the pop-ups non-interactive */
+    pointer-events: none;
   }
   @keyframes fadeOut {
     to {
@@ -82,8 +82,11 @@
 <!-- Container for top right buttons -->
 <div id="top-right-buttons">
   <button id="reset-button" onclick="resetGame()">Reset</button>
-  <button id="smiley-button" onclick="makeSmiley()">😊</button>
-  <button id="thumbs-up-button" onclick="makeThumbsUp()">👍</button>
+  <button id="smiley-button" onclick="changeEmoji('😊')">😊</button>
+  <button id="thumbs-up-button" onclick="changeEmoji('👍')">👍</button>
+  <button id="cowboy-button" onclick="changeEmoji('🤠')">🤠</button>
+  <button id="cool-button" onclick="changeEmoji('😎')">😎</button>
+  <button id="crying-button" onclick="changeEmoji('😢')">😢</button>
 </div>
 
 <script>
@@ -110,7 +113,7 @@
       if (score >= cost) {
         score -= cost;
         effect();
-        upgrade.remove(); // Remove the upgrade after purchase
+        upgrade.remove();
       } else {
         console.log('Not enough score to purchase this upgrade.');
       }
@@ -119,13 +122,13 @@
   }
 
   // Add upgrades that double the points per click
-  let upgradeCost = 2; // Starting cost for the first upgrade
+  let upgradeCost = 2;
   for (let i = 1; i <= 50; i++) {
     addUpgrade(`Double Points ${i}`, upgradeCost, function() {
       scorePerClick *= 2;
       console.log(`Double Points ${i} upgrade purchased!`);
     });
-    upgradeCost *= 50; // Each subsequent upgrade costs 50 times more
+    upgradeCost *= 50;
   }
 
   // Function to show points popup where the cursor is
@@ -158,20 +161,12 @@
     scoreDisplay.textContent = score;
     clearInterval(autoClickerInterval);
     autoClickerInterval = null;
-    // Reset other upgrades as needed
     console.log('Game has been reset.');
   }
 
-  // Function to change the clicker button to a smiley face
-  function makeSmiley() {
-    clickerButton.textContent = '😊';
-    clickerButton.onclick = updateScore; // Keep the score updating functionality
-  }
-
-  // Function to change the clicker button back to a thumbs up
-  function makeThumbsUp() {
-    clickerButton.textContent = '👍';
-    clickerButton.onclick = updateScore; // Keep the score updating functionality
+  // Function to change the clicker button to different emojis
+  function changeEmoji(emoji) {
+    clickerButton.textContent = emoji;
   }
 </script>
 </body>
