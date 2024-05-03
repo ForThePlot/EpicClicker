@@ -88,7 +88,30 @@
   }
 
   // Function to add upgrades
-  // ... same as before ...
+  function addUpgrade(name, cost, effect) {
+    const upgrade = document.createElement('button');
+    upgrade.textContent = `${name} - Cost: ${cost}`;
+    upgrade.onclick = function() {
+      if (score >= cost) {
+        score -= cost;
+        effect();
+        upgrade.remove(); // Remove the upgrade after purchase
+      } else {
+        console.log('Not enough score to purchase this upgrade.');
+      }
+    };
+    upgradesContainer.appendChild(upgrade);
+  }
+
+  // Add upgrades that double the points per click
+  let upgradeCost = 2; // Starting cost for the first upgrade
+  for (let i = 1; i <= 50; i++) {
+    addUpgrade(`Double Points ${i}`, upgradeCost, function() {
+      scorePerClick *= 2;
+      console.log(`Double Points ${i} upgrade purchased!`);
+    });
+    upgradeCost *= 50; // Each subsequent upgrade costs 50 times more
+  }
 
   // Function to show points popup where the cursor is
   function showPointsPopup(points, event) {
@@ -108,18 +131,33 @@
   }
 
   // Function to toggle the visibility of the upgrades
-  // ... same as before ...
+  function toggleUpgrades() {
+    upgradesVisible = !upgradesVisible;
+    upgradesContainer.style.maxHeight = upgradesVisible ? '100px' : '0';
+  }
 
   // Function to reset the game
-  // ... same as before ...
+  function resetGame() {
+    score = 0;
+    scorePerClick = 1;
+    scoreDisplay.textContent = score;
+    clearInterval(autoClickerInterval);
+    autoClickerInterval = null;
+    // Reset other upgrades as needed
+    console.log('Game has been reset.');
+  }
 
   // Function to change the clicker button to a smiley face
-  // ... same as before ...
+  function makeSmiley() {
+    clickerButton.textContent = '😊';
+    clickerButton.onclick = updateScore; // Keep the score updating functionality
+  }
 
   // Function to change the clicker button back to a thumbs up
-  // ... same as before ...
+  function makeThumbsUp() {
+    clickerButton.textContent = '👍';
+    clickerButton.onclick = updateScore; // Keep the score updating functionality
+  }
 </script>
 </body>
 </html>
-
-
