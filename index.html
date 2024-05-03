@@ -11,30 +11,31 @@
     height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-  }
-  #game-container {
-    text-align: center;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
   }
   #score-container {
-    font-size: 3em; /* BIG and bold */
-    font-weight: bold; /* BIG and bold */
-    text-align: left; /* at the top left */
+    font-size: 3em;
+    font-weight: bold;
+    text-align: left;
     margin: 20px;
   }
   #clicker-button {
-    font-size: 4em; /* Larger button */
+    font-size: 4em;
     padding: 30px;
-    margin: auto; /* put the clicker in the middle */
+    margin: auto;
   }
   #upgrades-container {
     background-color: #f8f8f8;
     border-top: 1px solid #ccc;
-    padding: 10px 0;
+    overflow-y: auto; /* Make it scrollable */
+    transition: max-height 0.5s ease-out;
+    max-height: 200px; /* Adjust as needed */
+  }
+  #toggle-upgrades {
+    background: #ddd;
+    color: #333;
+    padding: 5px 10px;
+    cursor: pointer;
+    text-align: center;
   }
   button {
     font-size: 1.5em;
@@ -51,6 +52,7 @@
 <div id="score-container">Score: <span id="score">0</span></div>
 <div id="game-container">
   <button id="clicker-button" onclick="updateScore()">👍</button>
+  <div id="toggle-upgrades" onclick="toggleUpgrades()">Toggle Upgrades</div>
   <div id="upgrades-container">
     <!-- Upgrades will be dynamically added here -->
   </div>
@@ -66,6 +68,8 @@
   const scoreDisplay = document.getElementById('score');
   const clickerButton = document.getElementById('clicker-button');
   const upgradesContainer = document.getElementById('upgrades-container');
+  const toggleUpgradesButton = document.getElementById('toggle-upgrades');
+  let upgradesVisible = true;
 
   // Function to update the score
   function updateScore() {
@@ -89,21 +93,25 @@
     upgradesContainer.appendChild(upgrade);
   }
 
-  // One-time upgrades
-  for (let i = 1; i <= 5; i++) {
-    addUpgrade(`Double Score ${i}`, 50 * i, function() {
+  // Add upgrades that double the points per click
+  for (let i = 1; i <= 50; i++) {
+    addUpgrade(`Double Points ${i}`, Math.pow(2, i), function() {
       scorePerClick *= 2;
-      console.log('Double Score upgrade purchased!');
+      console.log(`Double Points ${i} upgrade purchased!`);
     });
   }
 
-  // Auto Clicker upgrade
-  addUpgrade('Auto Clicker', 100, function() {
-    if (!autoClickerInterval) {
-      autoClickerInterval = setInterval(updateScore, 1000);
-      console.log('Auto Clicker upgrade purchased!');
-    }
+  // Special upgrade that increases points per click by 1000 times
+  addUpgrade('Super Click', 1000000, function() {
+    scorePerClick *= 1000;
+    console.log('Super Click upgrade purchased!');
   });
+
+  // Function to toggle the visibility of the upgrades
+  function toggleUpgrades() {
+    upgradesVisible = !upgradesVisible;
+    upgradesContainer.style.maxHeight = upgradesVisible ? '200px' : '0';
+  }
 
   // Function to reset the game
   function resetGame() {
@@ -130,3 +138,4 @@
 </script>
 </body>
 </html>
+
