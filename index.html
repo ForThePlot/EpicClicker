@@ -51,10 +51,6 @@
     font-size: 1.5em;
     padding: 15px;
     margin: 5px;
-    -webkit-user-select: none; /* Safari */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Chrome, Opera, and non-prefixed browsers */
   }
   .points-popup {
     position: fixed;
@@ -67,6 +63,12 @@
       opacity: 0;
     }
   }
+  /* Style for the top right buttons container */
+  #top-right-buttons {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
 </style>
 </head>
 <body>
@@ -76,9 +78,13 @@
 <div id="upgrades-container">
   <!-- Upgrades will be dynamically added here -->
 </div>
-<button id="reset-button" onclick="resetGame()">Reset</button>
-<button id="smiley-button" onclick="makeSmiley()">😊</button>
-<button id="thumbs-up-button" onclick="makeThumbsUp()">👍</button>
+
+<!-- Container for top right buttons -->
+<div id="top-right-buttons">
+  <button id="reset-button" onclick="resetGame()">Reset</button>
+  <button id="smiley-button" onclick="makeSmiley()">😊</button>
+  <button id="thumbs-up-button" onclick="makeThumbsUp()">👍</button>
+</div>
 
 <script>
   let score = 0;
