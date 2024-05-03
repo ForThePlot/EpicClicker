@@ -94,18 +94,14 @@
   }
 
   // Add upgrades that double the points per click
+  let upgradeCost = 2; // Starting cost for the first upgrade
   for (let i = 1; i <= 50; i++) {
-    addUpgrade(`Double Points ${i}`, Math.pow(2, i), function() {
+    addUpgrade(`Double Points ${i}`, upgradeCost, function() {
       scorePerClick *= 2;
       console.log(`Double Points ${i} upgrade purchased!`);
     });
+    upgradeCost *= 50; // Each subsequent upgrade costs 50 times more
   }
-
-  // Special upgrade that increases points per click by 1000 times
-  addUpgrade('Super Click', 1000000, function() {
-    scorePerClick *= 1000;
-    console.log('Super Click upgrade purchased!');
-  });
 
   // Function to toggle the visibility of the upgrades
   function toggleUpgrades() {
@@ -138,4 +134,3 @@
 </script>
 </body>
 </html>
-
