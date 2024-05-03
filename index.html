@@ -15,6 +15,10 @@
     align-items: center; /* Center the content horizontally */
     background-image: url('YOUR_CARTOON_LOGS_IMAGE_URL_HERE');
     background-repeat: repeat;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Chrome, Opera, and non-prefixed browsers */
   }
   #score-container {
     position: absolute;
@@ -47,6 +51,10 @@
     font-size: 1.5em;
     padding: 15px;
     margin: 5px;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Chrome, Opera, and non-prefixed browsers */
   }
   .points-popup {
     position: fixed;
@@ -160,8 +168,5 @@
     clickerButton.onclick = updateScore; // Keep the score updating functionality
   }
 </script>
-</body>
-</html>
-
 </body>
 </html>
