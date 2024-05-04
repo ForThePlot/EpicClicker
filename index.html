@@ -94,6 +94,7 @@
 <script>
   let score = 0;
   let scorePerClick = 1;
+  let autoClickerEfficiency = 1;
   let autoClickerInterval;
   const scoreDisplay = document.getElementById('score');
   const clickerButton = document.getElementById('clicker-button');
@@ -106,6 +107,25 @@
     score += scorePerClick;
     scoreDisplay.textContent = score;
     showPointsPopup(scorePerClick, event);
+  }
+
+  // Function to change the emoji on the clicker button
+  function changeEmoji(emoji) {
+    clickerButton.textContent = emoji;
+  }
+
+  // Function to reset the game
+  function resetGame() {
+    score = 0;
+    scorePerClick = 1;
+    autoClickerEfficiency = 1;
+    upgradeCost = 50;
+    scoreDisplay.textContent = score;
+    clearInterval(autoClickerInterval);
+    autoClickerInterval = null;
+    upgradesContainer.innerHTML = '';
+    addNextUpgrade();
+    console.log('Game has been reset.');
   }
 
   // Function to add upgrades (both regular and autoclicker)
@@ -134,21 +154,24 @@
       scorePerClick *= 2;
       console.log('Double Points upgrade purchased!');
     });
-    addAutoclickerUpgrade('Autoclicker', upgradeCost, function() {
-      if (!autoClickerInterval) {
+    if (!autoClickerInterval) {
+      addAutoclickerUpgrade('Autoclicker', upgradeCost, function() {
         autoClickerInterval = setInterval(() => {
-          score += 1; // Autoclicker adds 1 point per second
+          score += autoClickerEfficiency;
           scoreDisplay.textContent = score;
         }, 1000);
-      }
-      console.log('Autoclicker upgrade purchased!');
-    });
+        console.log('Autoclicker upgrade purchased!');
+      });
+    } else {
+      addAutoclickerUpgrade('Double Autoclicker Efficiency', upgradeCost, function() {
+        autoClickerEfficiency *= 2;
+        console.log('Autoclicker efficiency doubled!');
+      });
+    }
   }
 
   // Function to add autoclicker upgrade
   function addAutoclickerUpgrade(name, cost, effect) {
-    // This function is similar to addUpgrade but specifically for autoclickers
-    // It can be customized further if autoclicker upgrades have different effects
     addUpgrade(name, cost, effect);
   }
 
@@ -165,5 +188,6 @@
 </script>
 </body>
 </html>
+
 
 
