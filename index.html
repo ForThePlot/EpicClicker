@@ -53,14 +53,19 @@
     margin: 5px;
     border-radius: 20px; /* Rounded corners for buttons */
   }
-  .points-popup {
+  .falling-number {
     position: fixed;
-    font-size: 2em;
-    animation: fadeOut 2s forwards;
-    pointer-events: none;
+    animation: fall 2s linear forwards;
+    pointer-events: none; /* Allows clicks to pass through */
+    color: red; /* Change the color if you like */
   }
-  @keyframes fadeOut {
-    to {
+  @keyframes fall {
+    0% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(200px); /* Adjust the falling distance as needed */
       opacity: 0;
     }
   }
@@ -95,6 +100,7 @@
   let score = 0;
   let scorePerClick = 1;
   let autoClickerEfficiency = 1;
+  let autoClickerSpeed = 1000; // Interval in milliseconds
   let autoClickerInterval;
   const scoreDisplay = document.getElementById('score');
   const clickerButton = document.getElementById('clicker-button');
@@ -106,7 +112,7 @@
   function updateScore(event) {
     score += scorePerClick;
     scoreDisplay.textContent = score;
-    showPointsPopup(scorePerClick, event);
+    showFallingNumber(scorePerClick, event.clientX, event.clientY);
   }
 
   // Function to change the emoji on the clicker button
@@ -119,6 +125,7 @@
     score = 0;
     scorePerClick = 1;
     autoClickerEfficiency = 1;
+    autoClickerSpeed = 1000;
     upgradeCost = 50;
     scoreDisplay.textContent = score;
     clearInterval(autoClickerInterval);
@@ -159,7 +166,7 @@
         autoClickerInterval = setInterval(() => {
           score += autoClickerEfficiency;
           scoreDisplay.textContent = score;
-        }, 1000);
+        }, autoClickerSpeed);
         console.log('Autoclicker upgrade purchased!');
       });
     } else {
@@ -167,12 +174,36 @@
         autoClickerEfficiency *= 2;
         console.log('Autoclicker efficiency doubled!');
       });
+      addAutoclickerUpgrade('Autoclicker Speed', upgradeCost, function() {
+        autoClickerSpeed = Math.max(100, autoClickerSpeed / 2); // Prevents speed from becoming 0
+        clearInterval(autoClickerInterval);
+        autoClickerInterval = setInterval(() => {
+          score += autoClickerEfficiency;
+          scoreDisplay.textContent = score;
+        }, autoClickerSpeed);
+        console.log('Autoclicker speed increased!');
+      });
     }
   }
 
   // Function to add autoclicker upgrade
   function addAutoclickerUpgrade(name, cost, effect) {
     addUpgrade(name, cost, effect);
+  }
+
+  // Function to show falling number where the cursor is
+  function showFallingNumber(points, x, y) {
+    const fallingNumber = document.createElement('div');
+    fallingNumber.textContent = `+${points}`;
+    fallingNumber.classList.add('falling-number');
+    fallingNumber.style.left = `${x}px`;
+    fallingNumber.style.top = `${y}px`;
+    document.body.appendChild(fallingNumber);
+
+    // Remove the falling number after animation ends
+    fallingNumber.addEventListener('animationend', () => {
+      fallingNumber.remove();
+    });
   }
 
   // Function to toggle the visibility of the upgrades
@@ -188,6 +219,3 @@
 </script>
 </body>
 </html>
-
-
-
