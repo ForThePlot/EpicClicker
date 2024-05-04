@@ -214,6 +214,40 @@
     upgradesContainer.style.maxHeight = upgradesVisible ? '100px' : '0';
   }
 
+  // Function to save player data
+  function savePlayerData() {
+    const playerData = {
+      score: score,
+      scorePerClick: scorePerClick,
+      autoClickerEfficiency: autoClickerEfficiency,
+      autoClickerSpeed: autoClickerSpeed,
+      upgradeCost: upgradeCost
+      // ... include other relevant data properties
+    };
+    localStorage.setItem('playerData', JSON.stringify(playerData));
+    console.log('Player data saved.');
+  }
+
+  // Function to load player data
+  function loadPlayerData() {
+    const savedData = JSON.parse(localStorage.getItem('playerData'));
+    if (savedData) {
+      score = savedData.score;
+      scorePerClick = savedData.scorePerClick;
+      autoClickerEfficiency = savedData.autoClickerEfficiency;
+      autoClickerSpeed = savedData.autoClickerSpeed;
+      upgradeCost = savedData.upgradeCost;
+      // ... load other relevant data properties
+      console.log('Player data loaded.');
+    }
+  }
+
+  // Call loadPlayerData when the page loads
+  window.onload = loadPlayerData;
+
+  // Set up an interval to save player data every minute
+  setInterval(savePlayerData, 60000); // 60000 milliseconds = 1 minute
+
   // Initially add the first set of upgrades
   addNextUpgrade();
 
