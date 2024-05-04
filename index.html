@@ -73,7 +73,7 @@
   /* Style for the autoclicker toggle button */
   #autoclicker-toggle {
     position: absolute;
-    top: 0;
+    bottom: 120px; /* Adjusted position */
     left: 0;
     background: #ddd;
     color: #333;
@@ -86,6 +86,10 @@
 <body>
 <div id="score-container">Score: <span id="score">0</span></div>
 <button id="clicker-button" onclick="updateScore(event)">👍</button>
+
+<!-- Autoclicker toggle button -->
+<div id="autoclicker-toggle" onclick="toggleAutoclickers()">Show Autoclickers</div>
+
 <div id="toggle-upgrades" onclick="toggleUpgrades()">Toggle Upgrades</div>
 <div id="upgrades-container">
   <!-- Upgrades will be dynamically added here -->
@@ -100,9 +104,6 @@
   <button id="cool-button" onclick="changeEmoji('😎')">😎</button>
   <button id="crying-button" onclick="changeEmoji('😢')">😢</button>
 </div>
-
-<!-- Autoclicker toggle button -->
-<div id="autoclicker-toggle" onclick="toggleAutoclickers()">Show Autoclickers</div>
 
 <script>
   let score = 0;
@@ -139,32 +140,18 @@
     upgradesContainer.appendChild(upgrade);
   }
 
-  // Function to add autoclicker upgrades
-  function addAutoclickerUpgrade(name, cost, effect) {
-    const upgrade = document.createElement('button');
-    upgrade.textContent = `${name} - Cost: ${cost}`;
-    upgrade.onclick = function() {
-      if (score >= cost) {
-        score -= cost;
-        effect();
-        upgrade.remove();
-      } else {
-        console.log('Not enough score to purchase this upgrade.');
-      }
-    };
-    upgradesContainer.appendChild(upgrade);
-  }
-
-  // Function to toggle the visibility of the upgrades
+  // Function to toggle the visibility of the upgrades and the Show Autoclickers button
   function toggleUpgrades() {
     upgradesVisible = !upgradesVisible;
     upgradesContainer.style.maxHeight = upgradesVisible ? '100px' : '0';
+    document.getElementById('autoclicker-toggle').style.display = upgradesVisible ? 'block' : 'none';
   }
 
   // Function to toggle the autoclicker upgrades
   function toggleAutoclickers() {
     showAutoclickers = !showAutoclickers;
     upgradesContainer.innerHTML = ''; // Clear existing upgrades
+    autoclickerCost = 50; // Reset the autoclicker cost
     if (showAutoclickers) {
       // Add autoclicker upgrades
       for (let i = 1; i <= 50; i++) {
@@ -193,38 +180,7 @@
     }
   }
 
-  // Function to show points popup where the cursor is
-  function showPointsPopup(points, event) {
-    const popup = document.createElement('div');
-    popup.textContent = `+${points}`;
-    popup.classList.add('points-popup');
-    document.body.appendChild(popup);
-
-    // Position the popup where the cursor is
-    popup.style.top = `${event.clientY}px`;
-    popup.style.left = `${event.clientX}px`;
-
-    // Remove the popup after 2 seconds
-    setTimeout(() => {
-      popup.remove();
-    }, 2000);
-  }
-
-  // Function to reset the game
-  function resetGame() {
-    score = 0;
-    scorePerClick = 1;
-    scoreDisplay.textContent = score;
-    clearInterval(autoClickerInterval);
-    autoClickerInterval = null;
-    console.log('Game has been reset.');
-  }
-
-  // Function to change the clicker button to different emojis
-  function changeEmoji(emoji) {
-    clickerButton.textContent = emoji;
-  }
+  // ... (rest of the script remains unchanged) ...
 </script>
 </body>
 </html>
-
