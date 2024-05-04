@@ -71,7 +71,7 @@
     right: 20px;
   }
   /* Style for the autoclicker toggle button */
-  #autoclicker-toggle, #autoclicker-speed-toggle {
+  #autoclicker-toggle {
     position: absolute;
     top: 0;
     left: 0;
@@ -80,10 +80,6 @@
     padding: 5px 10px;
     cursor: pointer;
     text-align: center;
-  }
-  #autoclicker-speed-toggle {
-    top: auto;
-    bottom: 0;
   }
 </style>
 </head>
@@ -107,8 +103,6 @@
 
 <!-- Autoclicker toggle button -->
 <div id="autoclicker-toggle" onclick="toggleAutoclickers()">Show Autoclickers</div>
-<!-- Autoclicker speed toggle button -->
-<div id="autoclicker-speed-toggle" onclick="toggleAutoclickerSpeed()">Show Autoclicker Speed Upgrades</div>
 
 <script>
   let score = 0;
@@ -119,11 +113,8 @@
   const upgradesContainer = document.getElementById('upgrades-container');
   let upgradesVisible = true;
   let showAutoclickers = false;
-  let showAutoclickerSpeed = false;
   let autoclickerCost = 50;
   let autoclickerEfficiency = 1;
-  let autoclickerSpeedCost = 1000;
-  let autoclickerSpeed = 1000; // Initial interval in milliseconds
 
   // Function to update the score
   function updateScore(event) {
@@ -164,22 +155,6 @@
     upgradesContainer.appendChild(upgrade);
   }
 
-  // Function to add autoclicker speed upgrades
-  function addAutoclickerSpeedUpgrade(name, cost, effect) {
-    const upgrade = document.createElement('button');
-    upgrade.textContent = `${name} - Cost: ${cost}`;
-    upgrade.onclick = function() {
-      if (score >= cost) {
-        score -= cost;
-        effect();
-        upgrade.remove();
-      } else {
-        console.log('Not enough score to purchase this upgrade.');
-      }
-    };
-    upgradesContainer.appendChild(upgrade);
-  }
-
   // Function to toggle the visibility of the upgrades
   function toggleUpgrades() {
     upgradesVisible = !upgradesVisible;
@@ -198,7 +173,7 @@
             autoClickerInterval = setInterval(() => {
               score += autoclickerEfficiency;
               scoreDisplay.textContent = score;
-            }, autoclickerSpeed);
+            }, 1000);
           }
           autoclickerEfficiency *= 2;
           console.log(`Autoclicker ${i} upgrade purchased!`);
@@ -206,7 +181,7 @@
         autoclickerCost *= 4;
       }
     } else {
-      // Show regular upgrades
+      // Add regular upgrades
       let upgradeCost = 50; // Starting cost for the first upgrade
       for (let i = 1; i <= 50; i++) {
         addUpgrade(`Double Points ${i}`, upgradeCost, function() {
@@ -215,30 +190,6 @@
         });
         upgradeCost *= 4; // Each subsequent upgrade costs 4 times the previous one
       }
-    }
-  }
-
-  // Function to toggle the autoclicker speed upgrades
-  function toggleAutoclickerSpeed() {
-    showAutoclickerSpeed = !showAutoclickerSpeed;
-    upgradesContainer.innerHTML = ''; // Clear existing upgrades
-    if (showAutoclickerSpeed) {
-      // Add autoclicker speed upgrades
-      for (let i = 1; i <= 20; i++) {
-        addAutoclickerSpeedUpgrade(`Speed Upgrade ${i}`, autoclickerSpeedCost, function() {
-          autoclickerSpeed = Math.max(100, autoclickerSpeed / 2); // Decrease interval to a minimum of 100ms
-          clearInterval(autoClickerInterval);
-          autoClickerInterval = setInterval(() => {
-            score += autoclickerEfficiency;
-            scoreDisplay.textContent = score;
-          }, autoclickerSpeed);
-          console.log(`Speed Upgrade ${i} purchased! Now clicking every ${autoclickerSpeed}ms.`);
-        });
-        autoclickerSpeedCost *= 4;
-      }
-    } else {
-      // Show other upgrades
-      // ... add other upgrades ...
     }
   }
 
@@ -254,9 +205,28 @@
     popup.style.left = `${event.clientX}px`;
 
     // Remove the popup after 2 seconds
- </script>
+    setTimeout(() => {
+      popup.remove();
+    }, 2000);
+  }
 
-  <!-- End of HTML document -->
+  // Function to reset the game
+  function resetGame() {
+    score = 0;
+    scorePerClick = 1;
+    scoreDisplay.textContent = score;
+    clearInterval(autoClickerInterval);
+    autoClickerInterval = null;
+    console.log('Game has been reset.');
+  }
+
+  // Function to change the clicker button to different emojis
+  function changeEmoji(emoji) {
+    clickerButton.textContent = emoji;
+  }
+</script>
 </body>
+</html>
+
 </html>
 <!-- Code Footer: End of Clicker Game Code -->
