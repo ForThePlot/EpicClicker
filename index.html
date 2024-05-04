@@ -64,12 +64,6 @@
       opacity: 0;
     }
   }
-  /* Style for the top right buttons container */
-  #top-right-buttons {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-  }
   /* Style for the autoclicker toggle button */
   #autoclicker-toggle {
     position: absolute;
@@ -80,6 +74,12 @@
     padding: 5px 10px;
     cursor: pointer;
     text-align: center;
+  }
+  /* Style for the top right buttons container */
+  #top-right-buttons {
+    position: absolute;
+    top: 20px;
+    right: 20px;
   }
 </style>
 </head>
@@ -145,14 +145,31 @@
     upgradesVisible = !upgradesVisible;
     upgradesContainer.style.maxHeight = upgradesVisible ? '100px' : '0';
     document.getElementById('autoclicker-toggle').style.display = upgradesVisible ? 'block' : 'none';
+    // Ensure regular upgrades are still displayed when toggling autoclickers
+    if (!showAutoclickers) {
+      populateRegularUpgrades();
+    }
+  }
+
+  // Function to populate regular upgrades
+  function populateRegularUpgrades() {
+    upgradesContainer.innerHTML = ''; // Clear existing upgrades
+    let upgradeCost = 50; // Starting cost for the first upgrade
+    for (let i = 1; i <= 50; i++) {
+      addUpgrade(`Double Points ${i}`, upgradeCost, function() {
+        scorePerClick *= 2;
+        console.log(`Double Points ${i} upgrade purchased!`);
+      });
+      upgradeCost *= 4; // Each subsequent upgrade costs 4 times the previous one
+    }
   }
 
   // Function to toggle the autoclicker upgrades
   function toggleAutoclickers() {
     showAutoclickers = !showAutoclickers;
-    upgradesContainer.innerHTML = ''; // Clear existing upgrades
-    autoclickerCost = 50; // Reset the autoclicker cost
     if (showAutoclickers) {
+      upgradesContainer.innerHTML = ''; // Clear existing upgrades
+      autoclickerCost = 50; // Reset the autoclicker cost
       // Add autoclicker upgrades
       for (let i = 1; i <= 50; i++) {
         addAutoclickerUpgrade(`Autoclicker ${i}`, autoclickerCost, function() {
@@ -168,19 +185,16 @@
         autoclickerCost *= 4;
       }
     } else {
-      // Add regular upgrades
-      let upgradeCost = 50; // Starting cost for the first upgrade
-      for (let i = 1; i <= 50; i++) {
-        addUpgrade(`Double Points ${i}`, upgradeCost, function() {
-          scorePerClick *= 2;
-          console.log(`Double Points ${i} upgrade purchased!`);
-        });
-        upgradeCost *= 4; // Each subsequent upgrade costs 4 times the previous one
-      }
+      populateRegularUpgrades();
     }
   }
+
+  // Call populateRegularUpgrades initially to display regular upgrades
+  populateRegularUpgrades();
 
   // ... (rest of the script remains unchanged) ...
 </script>
 </body>
+</html>
+
 </html>
