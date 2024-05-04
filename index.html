@@ -13,7 +13,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-image: url('background-image-url');
+    background-image: url('YOUR_CARTOON_LOGS_IMAGE_URL_HERE');
     background-repeat: repeat;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -30,10 +30,6 @@
   #clicker-button {
     font-size: 8em;
     padding: 60px;
-    transition: transform 0.3s; /* Smooth transition for growing and shrinking */
-  }
-  #clicker-button.grow {
-    transform: scale(1.5); /* Adjust scale value to control how much it grows */
   }
   #upgrades-container {
     position: absolute;
@@ -119,12 +115,6 @@
     score += scorePerClick;
     scoreDisplay.textContent = score;
     showFallingNumber(scorePerClick, event.clientX, event.clientY);
-    // Apply the grow effect
-    clickerButton.classList.add('grow');
-    // Remove the grow effect after some time
-    setTimeout(() => {
-      clickerButton.classList.remove('grow');
-    }, 300); // Matches the transition duration
   }
 
   // Function to change the emoji on the clicker button
@@ -260,5 +250,11 @@
 
   // Initially add the first set of upgrades
   addNextUpgrade();
+
+  // ... (rest of the script remains unchanged) ...
+</script>
+</body>
+</html>
+
 
   // ... (rest of the script remains unchanged
