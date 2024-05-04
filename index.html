@@ -64,17 +64,6 @@
       opacity: 0;
     }
   }
-  /* Style for the autoclicker toggle button */
-  #autoclicker-toggle {
-    position: absolute;
-    bottom: 120px; /* Adjusted position */
-    left: 0;
-    background: #ddd;
-    color: #333;
-    padding: 5px 10px;
-    cursor: pointer;
-    text-align: center;
-  }
   /* Style for the top right buttons container */
   #top-right-buttons {
     position: absolute;
@@ -86,9 +75,6 @@
 <body>
 <div id="score-container">Score: <span id="score">0</span></div>
 <button id="clicker-button" onclick="updateScore(event)">👍</button>
-
-<!-- Autoclicker toggle button -->
-<div id="autoclicker-toggle" onclick="toggleAutoclickers()">Show Autoclickers</div>
 
 <div id="toggle-upgrades" onclick="toggleUpgrades()">Toggle Upgrades</div>
 <div id="upgrades-container">
@@ -113,9 +99,7 @@
   const clickerButton = document.getElementById('clicker-button');
   const upgradesContainer = document.getElementById('upgrades-container');
   let upgradesVisible = true;
-  let showAutoclickers = false;
-  let autoclickerCost = 50;
-  let autoclickerEfficiency = 1;
+  let upgradeCost = 50; // Starting cost for the first upgrade
 
   // Function to update the score
   function updateScore(event) {
@@ -124,7 +108,7 @@
     showPointsPopup(scorePerClick, event);
   }
 
-  // Function to add regular upgrades
+  // Function to add upgrades (both regular and autoclicker)
   function addUpgrade(name, cost, effect) {
     const upgrade = document.createElement('button');
     upgrade.textContent = `${name} - Cost: ${cost}`;
@@ -133,6 +117,10 @@
         score -= cost;
         effect();
         upgrade.remove();
+        // Double the cost for the next upgrade
+        upgradeCost *= 2;
+        // Add the next upgrade
+        addNextUpgrade();
       } else {
         console.log('Not enough score to purchase this upgrade.');
       }
@@ -140,61 +128,42 @@
     upgradesContainer.appendChild(upgrade);
   }
 
-  // Function to toggle the visibility of the upgrades and the Show Autoclickers button
+  // Function to add the next upgrade
+  function addNextUpgrade() {
+    addUpgrade('Double Points', upgradeCost, function() {
+      scorePerClick *= 2;
+      console.log('Double Points upgrade purchased!');
+    });
+    addAutoclickerUpgrade('Autoclicker', upgradeCost, function() {
+      if (!autoClickerInterval) {
+        autoClickerInterval = setInterval(() => {
+          score += 1; // Autoclicker adds 1 point per second
+          scoreDisplay.textContent = score;
+        }, 1000);
+      }
+      console.log('Autoclicker upgrade purchased!');
+    });
+  }
+
+  // Function to add autoclicker upgrade
+  function addAutoclickerUpgrade(name, cost, effect) {
+    // This function is similar to addUpgrade but specifically for autoclickers
+    // It can be customized further if autoclicker upgrades have different effects
+    addUpgrade(name, cost, effect);
+  }
+
+  // Function to toggle the visibility of the upgrades
   function toggleUpgrades() {
     upgradesVisible = !upgradesVisible;
     upgradesContainer.style.maxHeight = upgradesVisible ? '100px' : '0';
-    document.getElementById('autoclicker-toggle').style.display = upgradesVisible ? 'block' : 'none';
-    // Ensure regular upgrades are still displayed when toggling autoclickers
-    if (!showAutoclickers) {
-      populateRegularUpgrades();
-    }
   }
 
-  // Function to populate regular upgrades
-  function populateRegularUpgrades() {
-    upgradesContainer.innerHTML = ''; // Clear existing upgrades
-    let upgradeCost = 50; // Starting cost for the first upgrade
-    for (let i = 1; i <= 50; i++) {
-      addUpgrade(`Double Points ${i}`, upgradeCost, function() {
-        scorePerClick *= 2;
-        console.log(`Double Points ${i} upgrade purchased!`);
-      });
-      upgradeCost *= 4; // Each subsequent upgrade costs 4 times the previous one
-    }
-  }
-
-  // Function to toggle the autoclicker upgrades
-  function toggleAutoclickers() {
-    showAutoclickers = !showAutoclickers;
-    if (showAutoclickers) {
-      upgradesContainer.innerHTML = ''; // Clear existing upgrades
-      autoclickerCost = 50; // Reset the autoclicker cost
-      // Add autoclicker upgrades
-      for (let i = 1; i <= 50; i++) {
-        addAutoclickerUpgrade(`Autoclicker ${i}`, autoclickerCost, function() {
-          if (!autoClickerInterval) {
-            autoClickerInterval = setInterval(() => {
-              score += autoclickerEfficiency;
-              scoreDisplay.textContent = score;
-            }, 1000);
-          }
-          autoclickerEfficiency *= 2;
-          console.log(`Autoclicker ${i} upgrade purchased!`);
-        });
-        autoclickerCost *= 4;
-      }
-    } else {
-      populateRegularUpgrades();
-    }
-  }
-
-  // Call populateRegularUpgrades initially to display regular upgrades
-  populateRegularUpgrades();
+  // Initially add the first set of upgrades
+  addNextUpgrade();
 
   // ... (rest of the script remains unchanged) ...
 </script>
 </body>
 </html>
 
-</html>
+
